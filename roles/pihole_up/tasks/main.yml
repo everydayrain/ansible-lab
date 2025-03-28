@@ -1,0 +1,3 @@
+- name: Upgrade pi-hole
+  ansible.builtin.shell:
+    cmd: pihole -up

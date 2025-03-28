@@ -1,0 +1,68 @@
+---
+- hosts: VM
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - apt_update_vm
+
+- hosts: lxc
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - apt_update_lxc
+
+- hosts: PVE
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - apt_update_lxc
+
+- name: Update and upgrade RPIs
+  hosts: RPIs
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - apt_update_rpi
+
+- name: Update and upgrade pihole
+  hosts: eddie
+  become: true
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - pihole_up
+
+- name: Update and upgrade vaultwarden family server
+  hosts: vault
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      async: 45
+      ansible.builtin.command: /bin/sleep 15
+      poll: 5
+  roles:
+    - apt_update_special
+
+- name: Update and upgrade rustdesk server
+  hosts: rustdesk
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      ansible.builtin.command: /bin/sleep 15
+      async: 45
+      poll: 5
+  roles:
+    - apt_update_special

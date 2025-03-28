@@ -1,0 +1,30 @@
+- name: Update caddy
+  hosts: caddy
+  vars_prompt:
+    - name: url
+      prompt: What is the caddy binary download url (found at https://caddyserver.com/download with dns.providers.cloudflare ticked)?
+      private: false
+
+    - name: version
+      prompt: What is the binary version number (found at https://github.com/caddyserver/caddy/releases)?
+      private: false
+
+  tasks:
+    - name: Download the forgejo binary
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "/root/downloads/caddy-{{ version }}-linux-amd64"
+        mode: 755
+
+    - name: Copy file from downloads to bin
+      ansible.builtin.copy:
+        src: /root/downloads/caddy-{{ version }}-linux-amd64
+        dest: /usr/bin/caddy
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Reboot lxc
+      ansible.builtin.reboot:
+        msg: "Rebooting machine in 5 seconds"

@@ -1,0 +1,35 @@
+- name: Update forgejo
+  hosts: forgejo
+  vars_prompt:
+    - name: url
+      prompt: What is the forgejo binary download url (e.g. "https://codeberg.org/forgejo/forgejo/releases/download/v10.0.1/forgejo-10.0.1-linux-amd64")?
+      private: false
+
+    - name: checksum
+      prompt: What is the checksum file download url (e.g. "https://codeberg.org/forgejo/forgejo/releases/download/v10.0.1/forgejo-10.0.1-linux-amd64.sha256")?
+      private: false
+
+    - name: version
+      prompt: What is the binary version number?
+      private: false
+
+  tasks:
+    - name: Download the forgejo binary
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "/root/downloads/forgejo-{{ version }}-linux-amd64"
+        mode: 655
+        checksum: sha256:{{ checksum }}
+
+    - name: Copy file from downloads to bin
+      ansible.builtin.copy:
+        src: /root/downloads/forgejo-{{ version }}-linux-amd64
+        dest: /usr/local/bin/forgejo
+        remote_src: yes
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Reboot lxc
+      ansible.builtin.reboot:
+        msg: "Rebooting machine in 5 seconds"

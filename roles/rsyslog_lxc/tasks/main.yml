@@ -1,0 +1,16 @@
+- name: Install rsyslog
+  ansible.builtin.apt:
+    name: rsyslog
+
+- name: Add instruction to dispatch logs to graylog
+  ansible.builtin.lineinfile:
+    path: /etc/rsyslog.conf
+    line: "*.*@@192.168.1.222:514;RSYSLOG_SyslogProtocol23Format"
+    regexp: '\*.\*@@192.168.1.222:514;RSYSLOG_SyslogProtocol23Format'
+    state: present
+    insertafter: EOF
+    create: true
+
+- name: Restart rsystlog
+  ansible.builtin.shell:
+    cmd: systemctl restart rsyslog
