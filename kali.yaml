@@ -9,114 +9,116 @@
       update_cache: true
       cache_valid_time: 3600
     - name: Install additional packages
-      ansible.builtin.package:
-        name: -curl
-          -tmuxp
-          -protobuf-compiler
-          -keepassxc-full
-          -luarocks
-          -tree-sitter-cli
-          -notepadqq
-          -putty-tools
-          -bloodhound
-          -snmp-mibs-downloader
-          -libreoffice
-          -xxd
-          -raven
-          -ssh-askpass
-          -peass
-          -npm
-          -shellter
-          -proxychains
-          -curl
-          -dnsrecon
-          -enum4linux
-          -enum4linux-ng
-          -gobuster
-          -impacket-scripts
-          -nbtscan
-          -nikto
-          -nmap
-          -onesixtyone
-          -oscanner
-          -redis-tools
-          -smbclient
-          -smbmap
-          -snmpwalk
-          -sslscan
-          -tnscmd10g
-          -whatweb
-          -wkhtmltopdf
-          -evil-winrm
-          -powercat
-          -rlwrap
-          -2to3
-          -bat
-          -chisel
-          -duf
-          -enum4linux
-          -exploitdb
-          -fdisk
-          -file
-          -flameshot
-          -fzf
-          -g++
-          -gcc-11
-          -gcc-12-base
-          -git
-          -gnupg
-          -gobuster
-          -grc
-          -grep
-          -htop
-          -impacket-scripts
-          -iputils-ping
-          -kate
-          -less
-          -lsd
-          -lua5.4
-          -man-db
-          -manpages
-          -mingw-w64
-          -most
-          -ncat
-          -netcat-traditional
-          -nikto
-          -nmap
-          -nnn
-          -onesixtyone
-          -open-vm-tools
-          -open-vm-tools-desktop
-          -openssh-client
-          -openvpn
-          -python3-dev
-          -python3-impacket
-          -python3-ldap3
-          -python3-pip
-          -python3-requests-ntlm
-          -python3-setuptools
-          -python3-venv
-          -python3-yaml
-          -remmina
-          -ripgrep
-          -rlwrap
-          -rofi
-          -rpm
-          -seclists
-          -smbclient
-          -smbmap
-          -snmp
-          -sshuttle
-          -stow
-          -tldr
-          -whatweb
-          -wine
-          -wine64
-          -zoxide
-          -sipvicious
-          -debootstrap
+      ansible.builtin.apt:
+        name:
+          - curl
+          - tmuxp
+          - protobuf-compiler
+          - keepassxc-full
+          - luarocks
+          - tree-sitter-cli
+          - notepadqq
+          - putty-tools
+          - bloodhound
+          - snmp-mibs-downloader
+          - libreoffice
+          - xxd
+          - raven
+          - ssh-askpass
+          - peass
+          - npm
+          - shellter
+          - proxychains
+          - curl
+          - dnsrecon
+          - enum4linux
+          - enum4linux-ng
+          - gobuster
+          - impacket-scripts
+          - nbtscan
+          - nikto
+          - nmap
+          - onesixtyone
+          - oscanner
+          - redis-tools
+          - smbclient
+          - smbmap
+          - snmpwalk
+          - sslscan
+          - tnscmd10g
+          - whatweb
+          - wkhtmltopdf
+          - evil-winrm
+          - powercat
+          - rlwrap
+          - 2to3
+          - bat
+          - chisel
+          - duf
+          - enum4linux
+          - exploitdb
+          - fdisk
           - fd-find
-      state: pres
+          - file
+          - flameshot
+          - fzf
+          - g++
+          - gcc-11
+          - gcc-12-base
+          - git
+          - gnupg
+          - gobuster
+          - grc
+          - grep
+          - htop
+          - impacket-scripts
+          - iputils-ping
+          - kate
+          - less
+          - lsd
+          - lua5.4
+          - man-db
+          - manpages
+          - mingw-w64
+          - most
+          - ncat
+          - netcat-traditional
+          - nikto
+          - nmap
+          - nnn
+          - onesixtyone
+          - open-vm-tools
+          - open-vm-tools-desktop
+          - openssh-client
+          - openvpn
+          - python3-dev
+          - python3-impacket
+          - python3-ldap3
+          - python3-pip
+          - python3-requests-ntlm
+          - python3-setuptools
+          - python3-venv
+          - python3-yaml
+          - remmina
+          - ripgrep
+          - rlwrap
+          - rofi
+          - rpm
+          - seclists
+          - smbclient
+          - smbmap
+          - snmp
+          - sshuttle
+          - stow
+          - tldr
+          - whatweb
+          - wine
+          - wine64
+          - zoxide
+          - sipvicious
+          - debootstrap
+          - fd-find
+      state: present
 
   Install_Font:
     - name: Create the nerdfont directory
@@ -170,6 +172,300 @@
         mode: "0755"
     - name: Download and unarchive ligolo
       ansible.builtin.unarchive:
-        src: https://github.com/nicocha30/ligolo-ng/releases/download/v0.4.4/ligolo-ng_agent_0.4.4_linux_amd64.tar.gz
+        src: https://github.com/nicocha30/ligolo-ng/releases/latest
         dest: "/opt/ligolo-ng"
         remote_src: yes
+    - name: Install ripgrep
+      ansible.builtin.apt:
+        deb: https://github.com/BurntSushi/ripgrep/releases/latest
+        dest: "/opt/"
+
+  Install wine-specific packages for 32-bit:
+    - name:
+      ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+        dpkg_options: "add-architecture i386"
+      ansible.builtin.package:
+        name:
+          - wine32
+          - mono-complete
+
+  Create Zippy user:
+    - name: Add the user 'zippy' with a bash shell, appending the group 'admins'
+      ansible.builtin.user:
+        name: zippy
+        password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+        state: present
+        shell: /bin/bash
+        create_home: yes
+        groups: admins
+        append: yes
+
+  Install git and stow:
+    - name: Become sudo
+      ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+    - name: Install git and stow
+      ansible.builtin.package:
+        name:
+          - git
+          - stow
+
+  Clone the lagerdad training repo:
+    - name: Clone a repo with separate git directory
+      ansible.builtin.git:
+        repo: "http://lagerdad:4lL1n4RxMEPEbP@192.168.1.177:3000/lagerdad/dotfiles.git"
+        dest: /home/zippy
+
+  Stow Kali-specific dotfiles:
+    - name: create the target directories needed by stow in the .config directory
+      ansible.builtin.file:
+        path: "/home/zippy/.config/{{ item }}"
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+      loop:
+        - feroxbuster
+        - i3
+        - kitty
+        - polybar
+        - tmux
+        - bloodhound
+    - name: create the navi directory needed by stow in the .local directory
+      ansible.builtin.file:
+        path: /home/zippy/.local/share/navi
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+    - name: stow dotfiles
+      ansible.builtin.shell:
+        cmd: "stow -d /home/zippy/dotfiles/{{ item }}"
+      loop:
+        - feroxbuster
+        - i3
+        - polybar
+        - tmux
+        - navi
+        - bloodhound
+
+  Install and stow Kitty:
+    - name: create the kitty directory needed by stow in the .cache directory
+      ansible.builtin.file:
+        path: /home/zippy/.cache/kitty
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+    - name: create the kitty directory needed by stow in the .config directory
+      ansible.builtin.file:
+        path: /home/zippy/.config/kitty
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+    - name: Install kitty
+      ansible.builtin.package:
+      ansible.builtin.apt:
+        name: kitty
+        state: present
+    - name: remove the kitty.conf default file
+      ansible.builtin.file:
+        path: /home/zippy/.config/kitty/kitty.conf
+        state: absent
+    - name: remove the current-theme.conf default file
+      ansible.builtin.file:
+        path: /home/zippy/.config/kitty/current-theme.conf
+        state: absent
+    - name: stow kitty dotfiles
+      ansible.builtin.shell:
+        cmd: "stow -d /home/zippy/dotfiles/kitty"
+
+  Prep and Install lazyvim:
+    - name: Make the neovim folder for lazyvim
+      ansible.builtin.file:
+        path: /home/zippy/.config/nvim
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+    - name: clone the lazyvim repo
+      ansible.builtin.git:
+        repo: "https://github.com/LazyVim/starter"
+        dest: /home/zippy/.config/nvim
+    - name: remove the git directory from the lazyvim repo
+      ansible.builtin.file:
+        path: /home/zippy/.config/nvim/.git
+        state: absent
+    - name: stow lazyvim
+      ansible.builtin.shell:
+        cmd: "stow -d /home/zippy/dotfiles/lazyvim"
+    - name: link neovim appimage to /usr/bin
+      ansible.builtin.file:
+        src: /opt/nvim
+        dest: /usr/bin/nvim
+        owner: zippy
+        group: zippy
+        state: link
+
+  Bulk install the remaining stow-specific apps:
+    - name: install multiple packages
+      ansible.builtin.apt:
+        name:
+          - feroxbuster
+          - i3-wm
+          - kitty
+          - polybar
+          - tmux
+          - zsh
+
+  Install pipx:
+    - name: installing pipx
+      ansible.builtin.apt:
+        name: pipx
+    - name: ensure path for pipx
+      ansible.builtin.shell:
+        cmd: "pipx ensurepath"
+
+  Configure and install everything zsh and tmux related:
+    - name: change zippy's shell to zsh
+      ansible.builtin.user:
+        name: zippy
+        shell: /bin/zsh
+    - name: download oh-my-zsh
+      ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: /tmp/ohmyzsh.sh
+    - name: install oh-my-zsh
+      ansible.builtin.script: /tmp/ohmyzsh.sh
+    - name: remove the defualt tmux files
+      ansible.builtin.file:
+        path: "/home/zippy/.oh-my-zsh/plugins/tmux/{{ item }}"
+        state: absent
+        loop:
+          - tmux.plugin.zsh
+          - tmux.only.conf
+          - tmux.extra.conf
+    - name: create the zsh directory
+      ansible.builtin.file:
+        path: /home/zippy/.config/zsh
+        state: directory
+        owner: zippy
+        group: zippy
+        mode: "0755"
+    - name: Copy the zshrc file for a new name
+      ansible.builtin.copy:
+        src: /home/zippy/.zshrc
+        dest: /home/zippy/.zshrc.preohmyzsh
+    - name: Remove the old file
+      ansible.builtin.file:
+        path: /home/zippy/.zshrc
+        state: absent
+    - name: stow zsh
+      ansible.builtin.shell:
+        cmd: "stow -d /home/zippy/dotfiles/kali_zsh"
+    - name: stow tmux
+      ansible.builtin.shell:
+        cmd: "stow -d /home/zippy/dotfiles/tmux"
+    - name: clone zsh-autosuggestions
+      ansible.builtin.git:
+        repo: "https://github.com/zsh-users/zsh-autosuggestions"
+        dest: /home/zippy/.oh-my-zsh/plugins/zsh-autosuggestions
+    - name: clone zsh-syntax-highlighting
+      ansible.builtin.git:
+        repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+        dest: /home/zippy/.oh-my-zsh/plugins/zsh-syntax-highlighting
+
+  Set timezone:
+    - name: Set timezone to Los_Angeles
+      ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+      community.general.timezone:
+        name: America/Los_Angeles
+
+  Install pipx packages:
+    - name: installing multiple packages
+      community.general.pipx:
+        name: { { item } }
+      loop:
+        - git-dumper
+        - defaultcreds-cheat-sheet
+        - uv
+    - name: install autorecon
+      community.general.pipx:
+        name: AutoRecon
+        source: git+https://github.com/Tib3rius/AutoRecon.git
+
+  Install multiple packages for python via uv:
+    - name: using community module to install
+      moreati.uv.pip:
+        name: { { item } }
+      loop:
+        - wsgidav
+        - pynvim
+        - pyright
+        - ruff
+        - ansible-lint
+        - black
+        - pyright
+        - cmakelang
+
+  Install rustup and rust binaries:
+    - name: download rustup
+      ansible.builtin.get_url:
+      url: https://sh.rustup.rs
+      dest: /tmp/rustup.sh
+    - name: install rustup
+      ansible.builtin.script: /tmp/rustup.sh
+    - name: Install multiple rust packages
+      community.general.cargo:
+        name: { { item } }
+        locked: true
+      loop:
+        - navi
+        - difftastic
+        - atuin
+        - cargo-update
+        - cargo-list
+
+  Install npm modules:
+    - name: installing multiple npm modules
+      community.general.npm:
+        name: { { item } }
+      loop:
+        - tree-sitter-cli
+        - tree-sitter
+        - "@tailwindcss/language-server"
+        - neovim
+        - prettier
+        - mardownlint-cli2
+        - dockerfile-lanaguage-server-nodejs
+        - "@microsoft/compose-language-service"
+        - "@ansible/ansible-language-server"
+
+  Install plugins for live preview in nnn:
+    - name: download nnn preview
+      ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs
+      dest: /tmp/nnnplugins.sh
+    - name: install nnn plugins
+      ansible.builtin.script: /tmp/nnnplugins.sh
+
+  Install XenSpawn:
+    - name: Clone xenspawn repo with separate git directory
+      ansible.builtin.git:
+        repo: "https://github.com/X0RW3LL/XenSpawn.git"
+        dest: /home/zippy
+
+  Demote vagrant user:
+    - name: remove vagrant user from sudoers
+      ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+      ansible.builtin.shell:
+        cmd: "sudo deluser vagrant sudo"
+
+  Disable ssh:
+    - name: disabling ssh
+      ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+      ansible.builtin.shell:
+        cmd: "sudo systemctl disable ssh"
