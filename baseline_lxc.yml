@@ -9,4 +9,3 @@
   roles:
     - apt_update_lxc
     - baseline_lxc
-    - rsyslog_lxc

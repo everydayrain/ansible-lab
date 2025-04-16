@@ -9,4 +9,3 @@
   roles:
     - apt_update_vm
     - baseline_vm
-    - rsyslog_vm
