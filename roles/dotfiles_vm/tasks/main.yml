@@ -1,0 +1,123 @@
+# at a mini9mum this will need cmake and zoxide through apt
+- name: Clone the dotfiles repo
+  ansible.builtin.git:
+    repo: "http://lagerdad:4lL1n4RxMEPEbP@192.168.1.177:3000/lagerdad/dotfiles.git"
+    dest: /home/zippy/dotfiles
+
+- name: Install multiple packages
+  ansible.builtin.apt:
+    name:
+      - zsh
+- name: stow dotfiles
+  ansible.builtin.shell:
+    cmd: "stow {{ item }}"
+    chdir: /home/zippy/dotfiles
+  loop:
+    - starship
+# This section installs and stows omz and tmux
+- name: Install the oh-my-zsh script
+  ansible.builtin.script: /home/sociodicy/virtualization/kali_oscp/provisioning/scripts/omz/install.sh --unattended
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+- name: Remove the defualt tmux files
+  ansible.builtin.file:
+    path: "/home/zippy/.oh-my-zsh/plugins/tmux/{{ item }}"
+    state: absent
+  loop:
+    - tmux.plugin.zsh
+    - tmux.only.conf
+    - tmux.extra.conf
+- name: create the zsh directory
+  ansible.builtin.file:
+    path: /home/zippy/.config/zsh
+    state: directory
+    owner: zippy
+    group: zippy
+    mode: "0755"
+- name: Copy the zshrc file for a new name
+  ansible.builtin.copy:
+    src: /home/zippy/.zshrc
+    dest: /home/zippy/.zshrc.preohmyzsh
+    remote_src: true
+    force: true
+- name: Remove the old file
+  ansible.builtin.file:
+    path: /home/zippy/.zshrc
+    state: absent
+- name: stow zsh
+  ansible.builtin.shell:
+    cmd: "stow kali_zsh"
+    chdir: /home/zippy/dotfiles
+- name: stow tmux
+  ansible.builtin.shell:
+    cmd: "stow tmux"
+    chdir: /home/zippy/dotfiles
+- name: clone zsh-autosuggestions
+  ansible.builtin.git:
+    repo: "https://github.com/zsh-users/zsh-autosuggestions"
+    dest: /home/zippy/.oh-my-zsh/plugins/zsh-autosuggestions
+- name: clone zsh-syntax-highlighting
+  ansible.builtin.git:
+    repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    dest: /home/zippy/.oh-my-zsh/plugins/zsh-syntax-highlighting
+
+# Installing nnn and its plugins using a custom bash script located on z2
+- name: Use the nnn bash script to download the latest nnn-nerd-static binary
+  ansible.builtin.script:
+    cmd: "/home/sociodicy/virtualization/kali_oscp/provisioning/scripts/nnn.sh"
+    chdir: /home/zippy
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+- name: Unarchive nnn
+  # unarchive module wouldn't work with the following copy module, said the download didn't exist when it did
+  ansible.builtin.shell:
+    cmd: "tar xzvf nnn.tar.gz"
+    chdir: /home/zippy
+- name: Copy the nnn binary from tmp to /usr/local/bin
+  ansible.builtin.copy:
+    src: /home/zippy/nnn-nerd-static
+    dest: /home/zippy/.local/bin/nnn
+    remote_src: yes
+    owner: zippy
+    group: zippy
+    mode: "0755"
+- name: Install nnn preview
+  ansible.builtin.script: /home/sociodicy/virtualization/kali_oscp/provisioning/scripts/nnnplugins.sh
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+
+# Installing rust and cargo apps
+- name: Install rustup
+  ansible.builtin.script: /home/sociodicy/virtualization/kali_oscp/provisioning/scripts/rustup-init.sh -y
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+- name: Install multiple rust packages
+  community.general.cargo:
+    name: "{{ item }}"
+    locked: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  loop:
+    - navi
+    - difftastic
+    - atuin
+    - starship
