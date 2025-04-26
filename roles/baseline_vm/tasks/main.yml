@@ -9,7 +9,7 @@
       - git
       - gpg
       - qemu-guest-agent
-      - htop
+      - btop
     state: present
 
 - name: Set timezone to Los_Angeles
