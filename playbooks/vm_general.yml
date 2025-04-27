@@ -5,4 +5,4 @@
     - basics_vm
     - dotfiles_kitty_tmux
     - nnn
-    - rustup
+    # - rustup

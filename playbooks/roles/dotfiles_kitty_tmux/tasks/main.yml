@@ -53,19 +53,19 @@
   ansible.builtin.file:
     path: /home/zippy/.zshrc
     state: absent
-- name: stow zsh
+- name: Stow zsh
   ansible.builtin.shell:
     cmd: "stow zsh"
     chdir: /home/zippy/dotfiles
-- name: stow tmux
+- name: Stow tmux
   ansible.builtin.shell:
     cmd: "stow tmux"
     chdir: /home/zippy/dotfiles
-- name: clone zsh-autosuggestions
+- name: Clone zsh-autosuggestions
   ansible.builtin.git:
     repo: "https://github.com/zsh-users/zsh-autosuggestions"
     dest: /home/zippy/.oh-my-zsh/plugins/zsh-autosuggestions
-- name: clone zsh-syntax-highlighting
+- name: Clone zsh-syntax-highlighting
   ansible.builtin.git:
     repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
     dest: /home/zippy/.oh-my-zsh/plugins/zsh-syntax-highlighting
@@ -80,3 +80,8 @@
     - tmux
     - zsh
     - starship
+
+- name: Switch zippy's shell from bash to zsh
+  ansible.builtin.user:
+    name: zippy
+    shell: /bin/zsh
