@@ -1,34 +1,18 @@
 # Installing nnn and its plugins using a custom bash script located on z2.
 # This script assumes a user named "zippy" exists on the target.
-- name: Use the nnn bash script to download the latest nnn-nerd-static binary
-  ansible.builtin.script:
-    cmd: "/home/sociodicy/scripts/ansible/playbooks/roles/nnn/vars/nnn.sh"
-    chdir: /home/zippy
+- name: Install nnn
   become: true
-  become_user: zippy
-  become_method: su
-  become_flags: "--login"
   vars:
-    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
-- name: Unarchive nnn
-  # unarchive module wouldn't work with the following copy module, said the download didn't exist when it did
-  ansible.builtin.shell:
-    cmd: "tar xzvf nnn.tar.gz"
-    chdir: /home/zippy
-- name: Copy the nnn binary from tmp to /usr/local/bin
-  ansible.builtin.copy:
-    src: /home/zippy/nnn-nerd-static
-    dest: /home/zippy/.local/bin/nnn
-    remote_src: yes
-    owner: zippy
-    group: zippy
-    mode: "0755"
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+  ansible.builtin.package:
+    name:
+      - nnn
+      # - xterm
+    state: present
+# Using nnn preview on headless machines is very challenging compared to standard rdp
 # - name: Install nnn preview
 #  ansible.builtin.script: /home/sociodicy/scripts/ansible/playbooks/roles/nnn/vars/nnnplugins.sh
 #  become: true
-#  become_user: zippy
-#  become_method: su
-#  become_flags: "--login"
 #  vars:
 #    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 - name: Remove the nnn binary
