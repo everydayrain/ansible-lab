@@ -1,0 +1,23 @@
+# Downloading fonts for use with stow commands later
+- name: Create the nerdfont directory
+  ansible.builtin.file:
+    path: /usr/share/fonts/nerdfonts/
+    state: directory
+    mode: "0755"
+- name: Download and Unarchive the nerdfont
+  ansible.builtin.unarchive:
+    src: https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.tar.xz
+    dest: "/usr/share/fonts/nerdfonts/"
+    remote_src: true
+
+- name: Install starship
+  community.general.cargo:
+    name: "{{ item }}"
+    locked: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+  loop:
+    - starship

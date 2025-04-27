@@ -10,22 +10,6 @@
       - cmake
     state: present
 
-#- name: Install rustup
-#  ansible.builtin.script: /home/sociodicy/scripts/ansible/playbooks/roles/rustup/vars/rustup-init.sh -y
-#  become: true
-#  become_user: zippy
-#  become_method: su
-#  become_flags: "--login"
-#  vars:
-#    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
-- name: Install multiple rust packages
-  community.general.cargo:
-    name: "{{ item }}"
-    locked: true
-  become_user: zippy
-  become_method: su
-  become_flags: "--login"
-  vars:
-    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
-  loop:
-    - starship
+- name: Configure rustup app
+  ansible.builtin.shell:
+    cmd: "rustup default stable"
