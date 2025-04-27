@@ -6,3 +6,4 @@
     - dotfiles_kitty_tmux
     - nnn
     - rustup
+    - fzf

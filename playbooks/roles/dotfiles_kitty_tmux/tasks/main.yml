@@ -13,6 +13,7 @@
       - kitty
       - rustup
       - lsd
+      - batcat
     state: present
 
 - name: Clone the dotfiles repo
