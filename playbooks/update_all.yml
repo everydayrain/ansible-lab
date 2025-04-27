@@ -66,3 +66,9 @@
       poll: 5
   roles:
     - apt_update_special
+
+- name: Send ntfy.sh update
+  uri:
+    url: "http://192.168.1.61/homelab"
+    method: POST
+    body: "{{ inventory_hostname }} upgrade complete"
