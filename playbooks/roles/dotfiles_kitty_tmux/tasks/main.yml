@@ -12,6 +12,7 @@
       - tmux
       - kitty
       - rustup
+      - lsd
     state: present
 
 - name: Clone the dotfiles repo
