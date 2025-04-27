@@ -1,0 +1,8 @@
+---
+- hosts: bookmarks
+  roles:
+    - apt_update_vm
+    - basics_vm
+    - dotfiles_kitty_tmux
+    - nnn
+    - rustup

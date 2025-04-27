@@ -4,9 +4,8 @@
     ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
   ansible.builtin.package:
     name:
-      - vim
       - curl
-      - git
+      - vim
       - gpg
       - qemu-guest-agent
       - btop

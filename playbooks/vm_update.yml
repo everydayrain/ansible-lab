@@ -1,0 +1,5 @@
+---
+- hosts: VM
+  roles:
+    - apt_update_vm
+    -

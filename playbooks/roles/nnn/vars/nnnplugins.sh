@@ -1,0 +1,1 @@
+/home/sociodicy/virtualization/kali_oscp/provisioning/scripts/nnnplugins.sh
