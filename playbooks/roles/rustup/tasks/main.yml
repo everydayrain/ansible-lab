@@ -13,3 +13,9 @@
 - name: Configure rustup app
   ansible.builtin.shell:
     cmd: "rustup default stable"
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"

@@ -58,7 +58,7 @@
     - apt_update_special
 
 - name: Update and upgrade rustdesk server
-  hosts: rustdesk
+  hosts: rustdesk, rusttail
   tasks:
     - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
       ansible.builtin.command: /bin/sleep 15
@@ -66,9 +66,3 @@
       poll: 5
   roles:
     - apt_update_special
-
-- name: Send ntfy.sh update
-  uri:
-    url: "http://192.168.1.61/homelab"
-    method: POST
-    body: "{{ inventory_hostname }} upgrade complete"
