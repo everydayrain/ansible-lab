@@ -1,0 +1,25 @@
+# This role installs and configures TigerVNC for use with Guacamole
+- name: Install TigerVNC
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+  ansible.builtin.package:
+    name:
+      - tigervnc-standalone-server
+    state: present
+
+- name: Create a config directory for the zippy user
+  ansible.builtin.file:
+    path: /home/zippy/.vnc
+    state: directory
+    mode: "0755"
+
+- name: Create a config file for the zippy user
+  ansible.builtin.file:
+    path: /home/zippy/.vnc/xstartup
+    state: touch
+    owner: zippy
+    group: zippy
+    mode: "0755"
+
+-

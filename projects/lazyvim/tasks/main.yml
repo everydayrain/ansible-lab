@@ -43,3 +43,16 @@
     group: zippy
     mode: "0755"
     remote_src: true
+
+
+# UV install section for lsp for lazyvim
+      loop:
+        - pyright
+        - ruff
+        - ansible-lint
+        - black
+        - pyright
+        - cmakelang
+        - cmake
+        - build-essential
+        - rustup
