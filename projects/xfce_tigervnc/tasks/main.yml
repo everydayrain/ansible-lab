@@ -14,12 +14,18 @@
     state: directory
     mode: "0755"
 
-- name: Create a config file for the zippy user
-  ansible.builtin.file:
-    path: /home/zippy/.vnc/xstartup
-    state: touch
+# - name: Create a config file for the zippy user
+#  ansible.builtin.file:
+#    path: /home/zippy/.vnc/xstartup
+#     state: touch
+#    owner: zippy
+#    group: zippy
+#    mode: "0755"
+
+- name: Copy file from downloads to bin
+  ansible.builtin.copy:
+    src: /home/sociodicy/scripts/ansible/playbooks/roles/xfce_tigervnc/vars/xstartup
+    dest: /home/zippy/.vnc
     owner: zippy
     group: zippy
     mode: "0755"
-
--
