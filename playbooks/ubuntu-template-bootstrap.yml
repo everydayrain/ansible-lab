@@ -1,0 +1,21 @@
+# Use this playbook whenever you make a clone of the Ubuntu 24.04 template
+---
+- hosts: buildpipesec
+  become: true
+
+  vars:
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+    docker_add_repo: true
+
+  roles:
+    - apt_update_vm
+    - basics_vm
+    - dotfiles_kitty_tmux
+    - nnn
+    - rustup
+    - starship
+    - atuin
+    - rsyslog_vm
+    - geerlingguy.docker
