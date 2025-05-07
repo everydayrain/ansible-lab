@@ -3,10 +3,10 @@
   roles:
     #- apt_update_kali
     - basics_kali
-    - dotfiles_kitty_tmux
-    - nnn
-    - rustup
-    - starship
+    - dotfiles_kali
+    - nnn_kali
+    - rustup_kali
+    - starship_kali
     - navi
-    - atuin
+    - atuin_kali
     - lazyvim

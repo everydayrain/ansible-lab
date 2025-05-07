@@ -1,0 +1,94 @@
+# at a minimum this will need cmake and zoxide, as well as the apps used by the dotfiles, through apt
+# This role is for a VM with a user "zippy." It also assumes the target is headless.
+- name: Install apps required for stowing and used by configs in dotfiles
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ansible.builtin.package:
+    name:
+      - git
+      - stow
+      - zsh
+      - tmux
+      - kitty
+      - rustup
+      - lsd
+      - bat
+      - fzf
+    state: present
+
+- name: Clone the dotfiles repo
+  ansible.builtin.git:
+    repo: "http://lagerdad:4lL1n4RxMEPEbP@192.168.1.177:3000/lagerdad/dotfiles.git"
+    dest: /home/zippy/dotfiles
+
+# This section installs and stows omz and tmux
+- name: Install the oh-my-zsh script
+  ansible.builtin.script: /home/sociodicy/scripts/ansible/playbooks/roles/dotfiles_kitty_tmux/vars/install.sh --unattended
+  become: true
+  become_user: zippy
+  become_method: su
+  become_flags: "--login"
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+- name: Remove the defualt tmux files
+  ansible.builtin.file:
+    path: "/home/zippy/.oh-my-zsh/plugins/tmux/{{ item }}"
+    state: absent
+  loop:
+    - tmux.plugin.zsh
+    - tmux.only.conf
+    - tmux.extra.conf
+- name: Create the zsh directory
+  ansible.builtin.file:
+    path: /home/zippy/.config/zsh
+    state: directory
+    owner: zippy
+    group: zippy
+    mode: "0755"
+- name: Copy the zshrc file for a new name
+  ansible.builtin.copy:
+    src: /home/zippy/.zshrc
+    dest: /home/zippy/.zshrc.preohmyzsh
+    remote_src: true
+    force: true
+- name: Remove the old file
+  ansible.builtin.file:
+    path: /home/zippy/.zshrc
+    state: absent
+- name: Stow zsh
+  ansible.builtin.shell:
+    cmd: "stow zsh"
+    chdir: /home/zippy/dotfiles
+- name: Stow tmux
+  ansible.builtin.shell:
+    cmd: "stow tmux"
+    chdir: /home/zippy/dotfiles
+- name: Clone zsh-autosuggestions
+  ansible.builtin.git:
+    repo: "https://github.com/zsh-users/zsh-autosuggestions"
+    dest: /home/zippy/.oh-my-zsh/plugins/zsh-autosuggestions
+- name: Clone zsh-syntax-highlighting
+  ansible.builtin.git:
+    repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    dest: /home/zippy/.oh-my-zsh/plugins/zsh-syntax-highlighting
+
+- name: Stow dotfiles
+  ansible.builtin.shell:
+    cmd: "stow {{ item }}"
+    chdir: /home/zippy/dotfiles
+  loop:
+    # - starship
+    - kitty
+    - tmux
+    - zsh
+    - starship
+
+- name: Switch zippy's shell from bash to zsh
+  ansible.builtin.user:
+    name: zippy
+    shell: /bin/zsh
+    state: present
+  become: true
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"

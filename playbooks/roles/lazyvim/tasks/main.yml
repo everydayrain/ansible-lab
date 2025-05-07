@@ -47,7 +47,7 @@
 # UV install section for lsp for lazyvim
 - name: Install requests to a virtualenv
   moreati.uv.pip:
-    name: { { item } }
+    name: "{{ item }}"
   loop:
     - pyright
     - ruff
