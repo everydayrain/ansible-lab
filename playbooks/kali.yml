@@ -1,7 +1,7 @@
 ---
 - hosts: kali
   roles:
-    - apt_update_vm
+    - apt_update_kali
     - basics_vm
     - dotfiles_kitty_tmux
     - nnn
