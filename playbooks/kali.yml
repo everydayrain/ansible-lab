@@ -1,11 +1,12 @@
 ---
 - hosts: kali
   roles:
-    - apt_update_kali
-    - basics_vm
+    #- apt_update_kali
+    - basics_kali
     - dotfiles_kitty_tmux
     - nnn
     - rustup
     - starship
     - navi
     - atuin
+    - lazyvim
