@@ -16,54 +16,91 @@
   ansible.builtin.git:
     repo: "https://github.com/LazyVim/starter"
     dest: /home/zippy/.config/nvim
+  ignore_errors: true
 - name: remove the git directory from the lazyvim repo
   ansible.builtin.file:
     path: /home/zippy/.config/nvim/.git
     state: absent
+  ignore_errors: true
 - name: remove the options.lua file from the neovim directory
   ansible.builtin.file:
     path: /home/zippy/.config/nvim/lua/config/options.lua
     state: absent
+  ignore_errors: true
 - name: remove the keymaps.lua file from the neovim directory
   ansible.builtin.file:
     path: /home/zippy/.config/nvim/lua/config/keymaps.lua
     state: absent
+  ignore_errors: true
 - name: Remove the lazyvim plugins directory
   ansible.builtin.file:
     path: /home/zippy/.config/nvim/lua/plugins
     state: absent
+  ignore_errors: true
 - name: stow lazyvim
   ansible.builtin.shell:
     cmd: "cd /home/zippy/dotfiles && stow lazyvim"
+  ignore_errors: true
 - name: link neovim appimage to /usr/bin
   ansible.builtin.copy:
-    src: /home/zippy/nvim
+    eh src: /home/zippy/nvim
     dest: /home/zippy/.local/bin
     owner: zippy
     group: zippy
     mode: "0755"
     remote_src: true
+  ignore_errors: true
 
 # Install uv itself
-#- name: Install uv
-#  ansible.builtin.shell:
-#    cmd: "curl -LsSf https://astral.sh/uv/install.sh | sh"
-#- name: Source uv
-#  ansible.builtin.shell:
-#    cmd: "source $HOME/.local/bin/env"
+- name: Install uv
+  ansible.builtin.shell:
+    cmd: "curl -LsSf https://astral.sh/uv/install.sh | sh"
+- name: Source uv
+  ansible.builtin.shell:
+    cmd: "source $HOME/.local/bin/env"
+
 # UV install section for lsp for lazyvim
-- name: Install requests to a virtualenv
+- name: Install python packages using uv
   become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
-  ansible.builtin.shell:
-    cmd: "uv tool install {{ item }}"
+  ansible.builtin.command:
+    cmd: "/home/zippy/.local/bin/uv tool install {{ item }}"
   loop:
     - pyright
     - ruff
     - ansible-lint
     - black
-    - pyright
     - cmakelang
     - cmake
-    - build-essential
+  ignore_errors: true
+
+# Installs npm libraries, mostly for nvim
+- name: Install nodejs and npm
+  become: true
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ansible.builtin.apt:
+    name:
+      - nodejs
+      - npm
+    state: present
+
+- name: Installing multiple npm modules
+  become: true
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+  loop:
+    - tree-sitter-cli
+    - tldr
+    - tree-sitter
+    - "@tailwindcss/language-server"
+    - neovim
+    - prettier
+    - markdownlint-cli2
+    - dockerfile-language-server-nodejs
+    - "@microsoft/compose-language-service"
+    - "@ansible/ansible-language-server"

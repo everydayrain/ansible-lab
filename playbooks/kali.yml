@@ -9,4 +9,5 @@
     #- starship_kali
     #- navi
     #- atuin_kali
-    - lazyvim
+    #- lazyvim
+    - guac_kali
