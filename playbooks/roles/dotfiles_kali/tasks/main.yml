@@ -58,7 +58,7 @@
     state: absent
 - name: Stow zsh
   ansible.builtin.shell:
-    cmd: "stow zsh"
+    cmd: "stow kali_zsh"
     chdir: /home/zippy/dotfiles
 - name: Stow tmux
   ansible.builtin.shell:

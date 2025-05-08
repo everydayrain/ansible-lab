@@ -6,6 +6,7 @@
     name:
       - curl
       - gpg
+      - grc
       - qemu-guest-agent
     state: present
 
