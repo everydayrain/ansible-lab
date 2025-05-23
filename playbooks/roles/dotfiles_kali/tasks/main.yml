@@ -8,6 +8,7 @@
     name:
       - git
       - stow
+      - grc
       - zsh
       - tmux
       - kitty
