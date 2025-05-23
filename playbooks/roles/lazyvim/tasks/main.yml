@@ -95,7 +95,6 @@
     global: true
   loop:
     - tree-sitter-cli
-    - tldr
     - tree-sitter
     - "@tailwindcss/language-server"
     - neovim

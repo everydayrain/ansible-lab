@@ -1,13 +1,13 @@
 ---
 - hosts: kali
   roles:
-    #- apt_update_kali
-    #- basics_kali
-    #- dotfiles_kali
-    #- nnn_kali
-    #- rustup_kali
-    #- starship_kali
-    #- navi
-    #- atuin_kali
-    #- lazyvim
+    - apt_update_kali
+    - basics_kali
+    - dotfiles_kali
+    - nnn_kali
+    - rustup_kali
+    - starship_kali
+    - navi
+    - atuin_kali
+    - lazyvim
     - guac_kali
