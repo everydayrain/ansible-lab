@@ -41,9 +41,10 @@
   ansible.builtin.shell:
     cmd: "cd /home/zippy/dotfiles && stow lazyvim"
   ignore_errors: true
+
 - name: link neovim appimage to /usr/bin
   ansible.builtin.copy:
-    eh src: /home/zippy/nvim
+    src: /home/zippy/nvim
     dest: /home/zippy/.local/bin
     owner: zippy
     group: zippy
@@ -55,9 +56,9 @@
 - name: Install uv
   ansible.builtin.shell:
     cmd: "curl -LsSf https://astral.sh/uv/install.sh | sh"
-- name: Source uv
-  ansible.builtin.shell:
-    cmd: "source $HOME/.local/bin/env"
+#- name: Source uv
+#  ansible.builtin.shell:
+#    cmd: "source $HOME/.local/bin/env"
 
 # UV install section for lsp for lazyvim
 - name: Install python packages using uv

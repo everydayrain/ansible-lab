@@ -7,6 +7,10 @@
   ansible.builtin.package:
     name:
       - git
+      - i3-wm
+      - feroxbuster
+      - polybar
+      - rofi
       - stow
       - grc
       - zsh
@@ -79,11 +83,14 @@
     cmd: "stow {{ item }}"
     chdir: /home/zippy/dotfiles
   loop:
-    # - starship
-    - kitty
+    - kali_kitty
+    - feroxbuster
+    - kali_i3
+    - kali_polybar
     - tmux
-    - zsh
+    - kali_zsh
     - starship
+    - rofi
 
 - name: Switch zippy's shell from bash to zsh
   ansible.builtin.user:
