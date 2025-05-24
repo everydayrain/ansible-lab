@@ -1,7 +1,6 @@
 ---
 - hosts: kali
   roles:
-    - apt_update_kali
     - basics_kali
     - dotfiles_kali
     - nnn_kali
