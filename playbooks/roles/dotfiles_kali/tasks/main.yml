@@ -90,7 +90,7 @@
     - tmux
     - kali_zsh
     - starship
-    - rofi
+    - feh
 
 - name: Switch zippy's shell from bash to zsh
   ansible.builtin.user:
