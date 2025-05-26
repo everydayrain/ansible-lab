@@ -2,7 +2,7 @@
 - hosts: kali
   roles:
     - basics_kali
-    - dotfiles_kali
+    #- dotfiles_kali
     - nnn_kali
     - rustup_kali
     - starship_kali

@@ -33,3 +33,10 @@
     owner: root
     group: root
     mode: "0755"
+
+- name: Set background using feh
+  become: true
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ansible.builtin.command:
+    cmd: "feh --bg-scale /usr/share/images/desktop-base/default"
