@@ -21,6 +21,7 @@
       - bat
       - fzf
       - feh
+      - fd-find
     state: present
 
 - name: Clone the dotfiles repo
