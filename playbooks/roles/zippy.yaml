@@ -1,0 +1,16 @@
+- name: Add the user 'zippy' with a zsh shell
+  ansible.builtin.user:
+    name: zippy
+    password: $6$6hctHIIdpV/EmdBs$9UW.VFYOZ/rlt11Gl/4oLCQsrELlydQPJG7f8ywPMYWU4lJ6/w/ruBGdW4vrBMbkRqk7N20Ku/wc60PjzLtAQ.
+    state: present
+    shell: /bin/zsh
+    create_home: yes
+    groups: sudo
+    append: true
+- name: Create an .ssh file for zippy
+  ansible.builtin.file:
+    path: /home/zippy/.ssh
+    state: directory
+    owner: zippy
+    group: zippy
+    mode: "0700"

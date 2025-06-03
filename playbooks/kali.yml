@@ -1,6 +1,12 @@
 ---
 - hosts: kali
+  vars:
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+    docker_add_repo: true
   roles:
+    #- kali_zippy
     - basics_kali
     - dotfiles_kali
     - nnn_kali
@@ -10,3 +16,4 @@
     - atuin_kali
     - lazyvim
     - guac_kali
+    - geerlingguy.docker

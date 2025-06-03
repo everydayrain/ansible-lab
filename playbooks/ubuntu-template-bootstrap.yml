@@ -17,5 +17,5 @@
     - rustup
     - starship
     - atuin
-    - rsyslog_vm
+    #- rsyslog_vm
     - geerlingguy.docker
