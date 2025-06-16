@@ -26,7 +26,7 @@
 
 - name: Clone the dotfiles repo
   ansible.builtin.git:
-    repo: "http://lagerdad:4lL1n4RxMEPEbP@192.168.1.177:3000/lagerdad/dotfiles.git"
+    repo: "http://lagerdad:4lL1n4RxMEPEbP@forgejo.picniclunch.party/lagerdad/dotfiles.git"
     dest: /home/zippy/dotfiles
 
 # This section installs and stows omz and tmux

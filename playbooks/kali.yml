@@ -15,5 +15,5 @@
     - navi
     - atuin_kali
     - lazyvim
-    - guac_kali
+    #- guac_kali
     - geerlingguy.docker

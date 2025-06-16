@@ -1,6 +1,6 @@
 # Use this playbook whenever you make a clone of the Ubuntu 24.04 template
 ---
-- hosts: buildpipesec
+- hosts: rgnsql
   become: true
 
   vars:
@@ -16,6 +16,5 @@
     - nnn
     - rustup
     - starship
-    - atuin
-    #- rsyslog_vm
+    # - atuin
     - geerlingguy.docker

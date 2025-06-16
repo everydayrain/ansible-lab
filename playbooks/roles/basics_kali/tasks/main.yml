@@ -14,8 +14,8 @@
     name:
       - curl
       - gpg
-      - grc
-      - qemu-guest-agent
+      #- grc
+      #- qemu-guest-agent
     state: present
 
 - name: Set timezone to Los_Angeles
