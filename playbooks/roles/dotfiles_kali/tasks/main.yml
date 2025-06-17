@@ -28,6 +28,7 @@
   ansible.builtin.git:
     repo: "http://lagerdad:4lL1n4RxMEPEbP@forgejo.picniclunch.party/lagerdad/dotfiles.git"
     dest: /home/zippy/dotfiles
+  ignore_errors: true
 
 # This section installs and stows omz and tmux
 - name: Install the oh-my-zsh script
@@ -38,6 +39,7 @@
   become_flags: "--login"
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ignore_errors: true
 - name: Remove the defualt tmux files
   ansible.builtin.file:
     path: "/home/zippy/.oh-my-zsh/plugins/tmux/{{ item }}"
@@ -53,12 +55,14 @@
     owner: zippy
     group: zippy
     mode: "0755"
+  ignore_errors: true
 - name: Copy the zshrc file for a new name
   ansible.builtin.copy:
     src: /home/zippy/.zshrc
     dest: /home/zippy/.zshrc.preohmyzsh
     remote_src: true
     force: true
+  ignore_errors: true
 - name: Remove the old file
   ansible.builtin.file:
     path: /home/zippy/.zshrc
@@ -67,18 +71,22 @@
   ansible.builtin.shell:
     cmd: "stow kali_zsh"
     chdir: /home/zippy/dotfiles
+  ignore_errors: true
 - name: Stow tmux
   ansible.builtin.shell:
     cmd: "stow tmux"
     chdir: /home/zippy/dotfiles
+  ignore_errors: true
 - name: Clone zsh-autosuggestions
   ansible.builtin.git:
     repo: "https://github.com/zsh-users/zsh-autosuggestions"
     dest: /home/zippy/.oh-my-zsh/plugins/zsh-autosuggestions
+  ignore_errors: true
 - name: Clone zsh-syntax-highlighting
   ansible.builtin.git:
     repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
     dest: /home/zippy/.oh-my-zsh/plugins/zsh-syntax-highlighting
+  ignore_errors: true
 
 - name: Stow dotfiles
   ansible.builtin.shell:
@@ -92,6 +100,7 @@
     - tmux
     - kali_zsh
     - starship
+  ignore_errors: true
 
 - name: Switch zippy's shell from bash to zsh
   ansible.builtin.user:
@@ -101,3 +110,4 @@
   become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ignore_errors: true
