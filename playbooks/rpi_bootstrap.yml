@@ -1,0 +1,7 @@
+# This is for when you have just installed a raspbian OS on a rpi
+---
+- hosts: eddie
+  roles:
+    - basics_vm
+    - apt_update_rpi
+    - pihole_up
