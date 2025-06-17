@@ -6,7 +6,7 @@
     docker_compose_package_state: present
     docker_add_repo: true
   roles:
-    #- kali_zippy
+    # - kali_zippy
     - basics_kali
     - dotfiles_kali
     - nnn_kali
@@ -15,5 +15,3 @@
     - navi
     - atuin_kali
     - lazyvim
-    #- guac_kali
-    - geerlingguy.docker
