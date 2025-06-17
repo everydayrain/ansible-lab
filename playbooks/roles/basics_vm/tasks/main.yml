@@ -1,4 +1,4 @@
-- name: Install
+- name: Install curl, vim, gpg, qemu-guest-agent and btop
   become: true
   vars:
     ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
