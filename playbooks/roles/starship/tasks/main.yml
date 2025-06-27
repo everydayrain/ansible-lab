@@ -18,8 +18,7 @@
   community.general.cargo:
     name: "{{ item }}"
     locked: true
-  become_method: su
-  become_flags: "--login"
+  become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
   loop:

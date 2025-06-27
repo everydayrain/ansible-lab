@@ -1,6 +1,6 @@
 # Use this playbook whenever you make a clone of the Ubuntu 24.04 template
 ---
-- hosts: rgnsql
+- hosts: llm
   become: true
 
   vars:
@@ -8,13 +8,14 @@
     docker_compose_package: docker-compose-plugin
     docker_compose_package_state: present
     docker_add_repo: true
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 
   roles:
     - apt_update_vm
     - basics_vm
-    - dotfiles_kitty_tmux
-    - nnn
-    - rustup
+    #- dotfiles_kitty_tmux
+    #- nnn
+    #- rustup
     - starship
     # - atuin
-    - geerlingguy.docker
+    # - geerlingguy.docker

@@ -15,6 +15,7 @@
       - lsd
       - bat
       - fzf
+      - trash-cli
     state: present
 
 - name: Clone the dotfiles repo

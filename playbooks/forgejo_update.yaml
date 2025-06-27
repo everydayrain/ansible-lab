@@ -17,19 +17,28 @@
     - name: Download the forgejo binary
       ansible.builtin.get_url:
         url: "{{ url }}"
-        dest: "/root/downloads/forgejo-{{ version }}-linux-amd64"
+        dest: "/home/zippy/downloads/forgejo-{{ version }}-linux-amd64"
         mode: 655
         checksum: sha256:{{ checksum }}
+      become: true
+      vars:
+        ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 
     - name: Copy file from downloads to bin
       ansible.builtin.copy:
-        src: /root/downloads/forgejo-{{ version }}-linux-amd64
+        src: /home/zippy/downloads/forgejo-{{ version }}-linux-amd64
         dest: /usr/local/bin/forgejo
         remote_src: yes
         owner: root
         group: root
         mode: "0755"
+      become: true
+      vars:
+        ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 
     - name: Reboot lxc
       ansible.builtin.reboot:
         msg: "Rebooting machine in 5 seconds"
+      become: true
+      vars:
+        ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
