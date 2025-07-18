@@ -22,6 +22,7 @@
       - fzf
       - feh
       - fd-find
+      - tealdeer
     state: present
 
 - name: Clone the dotfiles repo
