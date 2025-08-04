@@ -2,3 +2,4 @@
 - hosts: VM
   roles:
     - apt_update_vm
+    - apt_update_cargo
