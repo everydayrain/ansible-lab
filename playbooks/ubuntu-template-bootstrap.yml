@@ -1,7 +1,7 @@
 # Use this playbook whenever you make a clone of the Ubuntu 24.04 template
 ---
-- hosts: llm
-  become: true
+- hosts: recon
+  # become: true
 
   vars:
     docker_install_compose_plugin: true
@@ -11,11 +11,12 @@
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 
   roles:
-    - apt_update_vm
-    - basics_vm
+    #- apt_update_vm
+    #- basics_vm
     #- dotfiles_kitty_tmux
     #- nnn
     #- rustup
-    - starship
-    # - atuin
-    # - geerlingguy.docker
+    #- starship
+    #- atuin
+    - role: geerlingguy.docker
+      become: true

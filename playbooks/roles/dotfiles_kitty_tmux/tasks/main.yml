@@ -16,6 +16,7 @@
       - bat
       - fzf
       - trash-cli
+      - grc
     state: present
 
 - name: Clone the dotfiles repo
