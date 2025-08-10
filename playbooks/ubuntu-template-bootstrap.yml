@@ -13,10 +13,10 @@
   roles:
     - apt_update_vm
     - basics_vm
-    - dotfiles_kitty_tmux
+    # - dotfiles_kitty_tmux
     - nnn
-    - rustup
-    - starship
+    # - rustup
+    # - starship
     #- atuin
     - role: geerlingguy.docker
       become: true
