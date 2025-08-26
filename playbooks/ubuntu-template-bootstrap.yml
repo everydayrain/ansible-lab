@@ -1,7 +1,6 @@
 # Use this playbook whenever you make a clone of the Ubuntu 24.04 template
 ---
-- hosts: contabo
-  # become: true
+- hosts:
 
   vars:
     docker_install_compose_plugin: true
@@ -13,10 +12,10 @@
   roles:
     - apt_update_vm
     - basics_vm
-    # - dotfiles_kitty_tmux
+    - dotfiles_kitty_tmux
     - nnn
-    # - rustup
-    # - starship
-    #- atuin
+    - rustup
+    - starship
+    - atuin
     - role: geerlingguy.docker
       become: true
