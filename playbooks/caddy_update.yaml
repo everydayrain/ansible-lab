@@ -10,7 +10,7 @@
       private: false
 
   tasks:
-    - name: Download the forgejo binary
+    - name: Download the caddy binary
       ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "/root/downloads/caddy-{{ version }}-linux-amd64"
