@@ -1,6 +1,19 @@
 # Use this playbook whenever you spinup a new VPS
 ---
 - hosts: recon
+  vars_prompt:
+    - name: "proceed_with_play"
+      prompt: "Have you set the ssh key for the vps using eval? (yes/no)"
+      private: false
+
+  tasks:
+    - name: End play if user declines
+      meta: end_play
+      when: proceed_with_play | lower == 'no'
+
+    - name: This task will only run if the user chose 'yes'
+      debug:
+        msg: "Proceeding with the play!"
 
   vars:
     docker_install_compose_plugin: true
