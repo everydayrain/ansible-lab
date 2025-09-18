@@ -1,6 +1,6 @@
-# Use this playbook whenever you make a clone of the Ubuntu 24.04 template
+# Use this playbook whenever you spinup a new VPS
 ---
-- hosts:
+- hosts: contabo
 
   vars:
     docker_install_compose_plugin: true
@@ -10,12 +10,9 @@
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
 
   roles:
-    - apt_update_vm
-    - basics_vm
-    - dotfiles_kitty_tmux
-    - nnn
+    - apt_update_vps
+    - basics_vps
     - rustup
-    - starship
-    - atuin
+    - rustapps_vps
     - role: geerlingguy.docker
       become: true

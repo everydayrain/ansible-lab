@@ -1,5 +1,0 @@
----
-- hosts: external
-  roles:
-    - apt_update_vps
-    - nnn
