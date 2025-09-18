@@ -1,13 +1,13 @@
 # Use this playbook whenever you spinup a new VPS
 ---
-- hosts: contabo
+- hosts: recon
 
   vars:
     docker_install_compose_plugin: true
     docker_compose_package: docker-compose-plugin
     docker_compose_package_state: present
     docker_add_repo: true
-    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
 
   roles:
     - apt_update_vps
