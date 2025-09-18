@@ -27,5 +27,6 @@
     - basics_vps
     - rustup
     - rustapps_vps
+    - go_vps
     - role: geerlingguy.docker
       become: true
