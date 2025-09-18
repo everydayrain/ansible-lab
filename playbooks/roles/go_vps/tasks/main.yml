@@ -1,0 +1,60 @@
+- name: Install or Update Go
+  become: true
+  vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+    go_install_path: "/usr/local"
+
+  vars_prompt:
+    - name: url
+      prompt: What is the forgejo binary download url (e.g. https://go.dev/dl/go1.25.1.linux-amd64.tar.gz)"
+      private: false
+
+    - name: version
+      prompt: What is the binary version number?
+      private: false
+
+  tasks:
+    - name: Download the Go tarball
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "/tmp/go{{ version }}.tar.gz"
+        mode: 655
+
+    - name: Ensure Go install path exists
+      ansible.builtin.file:
+        path: "{{ go_install_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: Remove existing Go installation (optional, for upgrades)
+      ansible.builtin.file:
+        path: "{{ go_install_path }}/go"
+        state: absent
+      when: ansible_facts.exists.go_install_path is defined and ansible_facts.exists.go_install_path.isdir
+
+    - name: Extract Go tarball
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.tar.gz"
+        dest: "{{ go_install_path }}"
+        remote_src: true
+        creates: "{{ go_install_path }}/go/bin/go"
+
+    - name: Set Go environment variables (for all users)
+      ansible.builtin.blockinfile:
+        path: "/etc/profile.d/go_env.sh"
+        create: yes
+        mode: "0644"
+        block: |
+          export GOROOT={{ go_install_path }}/go
+          export PATH=$PATH:$GOROOT/bin
+          export GOPATH=$HOME/go
+        marker: "# Ansible Managed: Go Environment Variables"
+
+    - name: Verify Go installation
+      ansible.builtin.command: "{{ go_install_path }}/go/bin/go version"
+      register: go_version_output
+      changed_when: false
+
+    - name: Display Go version
+      ansible.builtin.debug:
+        var: go_version_output.stdout
