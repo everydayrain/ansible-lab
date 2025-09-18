@@ -1,0 +1,63 @@
+- name: Install curl, vim, gpg, qemu-guest-agent and btop
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  ansible.builtin.package:
+    name:
+      - curl
+      - vim
+      - gpg
+      - btop
+      - nfs-kernel-server
+      - unattended-upgrades
+      - tmux
+      - fzf
+      - trash-cli
+      - tree
+      - zip
+      - unzip
+      - nmap
+      - net-tools
+    state: present
+
+- name: Set timezone to Los_Angeles
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  community.general.timezone:
+    name: America/Los_Angeles
+
+- name: Replace sshd config line for PasswordAuthentication
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    search_string: "PasswordAuthentication yes"
+    line: PasswordAuthentication no
+
+- name: Replace sshd config line for UsePAM
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    search_string: "UsePAM yes"
+    line: UsePAM no
+
+- name: Replace sshd config line for PubkeyAuthentication
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    search_string: "PubkeyAuthentication"
+    line: PubkeyAuthentication yes
+
+- name: Check if reboot is required
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
