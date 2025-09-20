@@ -6,7 +6,7 @@
 
   vars_prompt:
     - name: url
-      prompt: What is the forgejo binary download url (e.g. https://go.dev/dl/go1.25.1.linux-amd64.tar.gz)"
+      prompt: What is the go binary download url (e.g. https://go.dev/dl/go1.25.1.linux-amd64.tar.gz)"
       private: false
 
     - name: version
@@ -39,16 +39,15 @@
         remote_src: true
         creates: "{{ go_install_path }}/go/bin/go"
 
-    - name: Set Go environment variables (for all users)
-      ansible.builtin.blockinfile:
-        path: "/etc/profile.d/go_env.sh"
-        create: yes
-        mode: "0644"
-        block: |
-          export GOROOT={{ go_install_path }}/go
-          export PATH=$PATH:$GOROOT/bin
-          export GOPATH=$HOME/go
-        marker: "# Ansible Managed: Go Environment Variables"
+    - name: Add go binary path to ~/.profile
+      lineinfile:
+        path: ~/.profile
+        line: "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin"
+        create: true
+        state: present
+
+    - name: Source updated profile
+      shell: . ~/.profile
 
     - name: Verify Go installation
       ansible.builtin.command: "{{ go_install_path }}/go/bin/go version"
