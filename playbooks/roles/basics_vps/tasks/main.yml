@@ -18,6 +18,8 @@
       - unzip
       - nmap
       - net-tools
+      - nodejs
+      - npm
     state: present
 
 - name: Set timezone to Los_Angeles
