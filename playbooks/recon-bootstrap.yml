@@ -6,7 +6,7 @@
       prompt: "Have you set the ssh key for the vps using eval? (yes/no)"
       private: false
 
-  tasks:
+  pre_tasks:
     - name: End play if user declines
       meta: end_play
       when: proceed_with_play | lower == 'no'
@@ -30,3 +30,10 @@
     - go_vps
     - role: geerlingguy.docker
       become: true
+
+  post_tasks:
+    - name: Send ntfy update
+      uri:
+        url: "http://192.168.1.61/homelab"
+        method: POST
+        body: "recon bootstrap complete"
