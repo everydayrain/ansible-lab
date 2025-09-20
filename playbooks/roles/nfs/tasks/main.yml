@@ -1,25 +1,22 @@
-    - name: Create NFS export directory
-      file:
-        path: /home/zippy/data
-        state: directory
-        mode: '0755'
+- name: Create NFS export directory
+  file:
+    path: /home/zippy/data
+    state: directory
+    mode: "0755"
 
-    - name: Configure NFS exports
-      lineinfile:
-        path: /etc/exports
-        line: "/srv/nfs/shared_data *(rw,sync,no_subtree_check)"
-        create: yes
-        state: present
-      notify: Restart nfs-kernel-server
+- name: Configure NFS exports
+  lineinfile:
+    path: /etc/exports
+    line: "/home/zippy/data {{ tailscale }}(rw,sync,no_subtree_check)"
+    create: true
+    state: present
+  notify: Restart nfs-kernel-server
 
-    - name: Ensure NFS service is running and enabled
-      systemd:
-        name: nfs-kernel-server
-        state: started
-        enabled: yes
+- name: Export NFS shares for existing session
+  ansible.builtin.command: exportfs -a
 
-  handlers:
-    - name: Restart nfs-kernel-server
-      systemd:
-        name: nfs-kernel-server
-        state: restarted
+- name: Ensure NFS service is running and enabled
+  systemd:
+    name: nfs-kernel-server
+    state: started
+    enabled: true
