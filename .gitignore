@@ -2,3 +2,4 @@ secrets/
 archive/
 inventory.yaml
 ansible.cfg
+playbooks/roles/nfs/vars/
