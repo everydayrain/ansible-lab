@@ -1,5 +1,6 @@
 # Installing nnn and its plugins using a custom bash script located on z2.
 # This script assumes a user named "zippy" exists on the target.
+# Using nnn preview on headless machines is very challenging compared to standard rdp, won't be installed here
 - name: Install nnn
   become: true
   vars:
@@ -9,12 +10,7 @@
       - nnn
       # - xterm
     state: present
-# Using nnn preview on headless machines is very challenging compared to standard rdp
-# - name: Install nnn preview
-#  ansible.builtin.script: /home/sociodicy/scripts/ansible/playbooks/roles/nnn/vars/nnnplugins.sh
-#  become: true
-#  vars:
-#    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
+
 - name: Remove the nnn binary
   ansible.builtin.file:
     path: /home/zippy/nnn-nerd-static
