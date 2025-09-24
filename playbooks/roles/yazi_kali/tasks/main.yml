@@ -1,0 +1,26 @@
+- name: Install dependencies
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
+  ansible.builtin.package:
+    name:
+      - fzf
+      - ffmpeg
+      - 7zip
+      - jq
+      - poppler-utils
+      - fd-find
+      - ripgrep
+      - fzf
+      - zoxide
+      - resvg
+      - imagemagick
+      - xclip
+    state: present
+- name: Install yazi
+  community.general.cargo:
+    name: "{{ item }}"
+    locked: true
+  loop:
+    - yazi-build
+    - dysk

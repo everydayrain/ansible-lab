@@ -29,6 +29,7 @@
     - rustapps_vps
     - go_vps
     - nfs
+    - navi
     - role: geerlingguy.docker
       become: true
 
