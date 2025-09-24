@@ -1,3 +1,4 @@
+# This play is for the Kali VM image builder variant, not vagrant
 ---
 - hosts: kali
   vars:
@@ -6,13 +7,13 @@
     docker_compose_package_state: present
     docker_add_repo: true
   roles:
-    - kali_zippy
     - basics_kali
     - dotfiles_kali
     - rustup_kali
     - starship_kali
     - navi
     - atuin_kali
+    - yazi_kali
     - lazyvim
     - guac_kali
-    # - geerlingguy.docker
+    - geerlingguy.docker
