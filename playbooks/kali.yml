@@ -6,6 +6,7 @@
     docker_compose_package: docker-compose-plugin
     docker_compose_package_state: present
     docker_add_repo: true
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
   roles:
     - basics_kali
     - dotfiles_kali
