@@ -1,7 +1,7 @@
 # Use this playbook whenever you need to update caido
 ---
 - name: Update caido
-  hosts: contabo
+  hosts: recon
   become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
