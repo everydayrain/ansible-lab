@@ -1,0 +1,60 @@
+- name: Install Go dependencies (Debian)
+  apt:
+    name:
+      - wget
+      - tar
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install Go dependencies (RedHat)
+  yum:
+    name:
+      - wget
+      - tar
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Check if Go is already installed
+  stat:
+    path: "{{ go_install_dir }}/bin/go"
+  register: go_binary
+
+- name: Download Go
+  get_url:
+    url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+    dest: /tmp/go.tar.gz
+    mode: "0644"
+  when: not go_binary.stat.exists
+
+- name: Remove old Go installation
+  file:
+    path: "{{ go_install_dir }}"
+    state: absent
+  when: not go_binary.stat.exists
+
+- name: Extract Go archive
+  unarchive:
+    src: /tmp/go.tar.gz
+    dest: /usr/local
+    remote_src: yes
+  when: not go_binary.stat.exists
+
+- name: Create GOPATH directory
+  file:
+    path: "{{ gopath }}"
+    state: directory
+    mode: "0755"
+
+- name: Set Go environment variables
+  lineinfile:
+    path: /etc/environment
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - 'PATH="/usr/local/go/bin:{{ gopath }}/bin:$PATH"'
+    - 'GOPATH="{{ gopath }}"'
+
+- name: Clean up Go tarball
+  file:
+    path: /tmp/go.tar.gz
+    state: absent

@@ -3,7 +3,7 @@
 - hosts: recon
   vars_prompt:
     - name: "proceed_with_play"
-      prompt: "Have you set the ssh key for the vps using eval? (yes/no)"
+      prompt: "Have you set the correct variables, including the ssh key for the vps using eval and the current Go version in the playbook? (yes/no)"
       private: false
 
   pre_tasks:
@@ -30,6 +30,26 @@
     - go_vps
     - nfs
     - navi
+    - role: go_tools
+      vars:
+        go_version: "1.25.5"
+        go_binaries:
+          - name: httpx
+            package: github.com/projectdiscovery/httpx/releases/latest
+          - name: gobuster
+            package: github.com/OJ/gobuster/releases/latest
+          - name: subfinder
+            package: github.com/projectdiscovery/subfinder/releases/latest
+          - name: gau
+            package: github.com/lc/gau/releases/latest
+          - name: ffuf
+            package: github.com/ffuf/ffuf/releases/
+          - name: httprobe
+            package: github.com/tomnomnom/httprobe/releases/latest
+          - name: meg
+            package: github.com/tomnomnom/meg/releases/latest
+          - name: unfurl
+            package: github.com/tomnomnom/unfurl/releases/latest
     - role: geerlingguy.docker
       become: true
 

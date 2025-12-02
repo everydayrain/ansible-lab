@@ -1,0 +1,33 @@
+- name: Install Go binaries
+  shell: |
+    export PATH=/usr/local/go/bin:$PATH
+    export GOPATH={{ gopath }}
+    /usr/local/go/bin/go install {{ item.package }}
+  args:
+    creates: "{{ gopath }}/bin/{{ item.name }}"
+  loop: "{{ go_binaries }}"
+  when: go_binaries | length > 0
+
+- name: Create symlinks to /usr/local/bin
+  file:
+    src: "{{ gopath }}/bin/{{ item.name }}"
+    dest: "/usr/local/bin/{{ item.name }}"
+    state: link
+  loop: "{{ go_binaries }}"
+  when: go_binaries | length > 0
+
+- name: Verify Go binary installations
+  command: "{{ item.name }} -version"
+  register: version_check
+  changed_when: false
+  failed_when: false
+  loop: "{{ go_binaries }}"
+  when: go_binaries | length > 0
+
+- name: Display installed Go tool versions
+  debug:
+    msg: "{{ item.item.name }}: {{ item.stdout | default('Not found') }}"
+  loop: "{{ version_check.results }}"
+  when:
+    - go_binaries | length > 0
+    - version_check.results is defined

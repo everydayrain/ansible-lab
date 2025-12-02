@@ -27,7 +27,7 @@
     - apt_update_lxc
 
 - name: Update and upgrade RPIs
-  hosts: RPIs
+  hosts: PIs
   tasks:
     - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
       ansible.builtin.command: /bin/sleep 15
@@ -37,7 +37,7 @@
     - apt_update_rpi
 
 - name: Update and upgrade pihole
-  hosts: eddie
+  hosts: PIs
   become: true
   tasks:
     - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
@@ -48,7 +48,7 @@
     - pihole_up
 
 - name: Update and upgrade vaultwarden family server
-  hosts: vault
+  hosts: VW
   tasks:
     - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
       async: 45
@@ -57,12 +57,6 @@
   roles:
     - apt_update_special
 
-- name: Update and upgrade rustdesk server
-  hosts: rustdesk, rusttail
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
-  roles:
-    - apt_update_special
+- name: Update recon
+  hosts: VPS
+  roles: apt_update_vps
