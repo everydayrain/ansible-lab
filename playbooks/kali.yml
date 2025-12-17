@@ -1,12 +1,6 @@
 # This play is for the Kali VM image builder variant, not vagrant
 ---
 - hosts: kali
-  vars:
-    docker_install_compose_plugin: true
-    docker_compose_package: docker-compose-plugin
-    docker_compose_package_state: present
-    docker_add_repo: true
-    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/kali.yml') }}"
   roles:
     - basics_kali
     - dotfiles_kali
@@ -17,5 +11,3 @@
     - yazi_kali
     - lazyvim
     - guac_kali
-    - role: geerlingguy.docker
-      become: true
