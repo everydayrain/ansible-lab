@@ -54,6 +54,8 @@
             package: github.com/projectdiscovery/interactsh/cmd/interactsh-server@latest
           - name: interactsh-client
             package: github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest
+          - name: notify
+            package: github.com/projectdiscovery/notify/cmd/notify@latest
     - role: geerlingguy.docker
       become: true
 
