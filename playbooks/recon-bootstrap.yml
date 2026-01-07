@@ -50,6 +50,10 @@
             package: github.com/tomnomnom/meg/releases/latest
           - name: unfurl
             package: github.com/tomnomnom/unfurl/releases/latest
+          - name: interactsh-server
+            package: github.com/projectdiscovery/interactsh/cmd/interactsh-server@latest
+          - name: interactsh-client
+            package: github.com/projectdiscovery/interactsh/cmd/interactsh-client@latest
     - role: geerlingguy.docker
       become: true
 
