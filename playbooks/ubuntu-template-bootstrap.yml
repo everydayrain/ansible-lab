@@ -13,9 +13,10 @@
     - apt_update_vm
     - basics_vm
     - dotfiles_kitty_tmux
-    - nnn
     - rustup
     - starship
     - atuin
+    - rust_apps
+    - yazi
     - role: geerlingguy.docker
       become: true

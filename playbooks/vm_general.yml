@@ -1,5 +1,5 @@
 ---
-- hosts: immich
+- hosts:
   roles:
     - apt_update_vm
     - basics_vm
