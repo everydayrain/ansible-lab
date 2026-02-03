@@ -3,3 +3,5 @@ archive/
 inventory.yaml
 ansible.cfg
 playbooks/roles/nfs/vars/
+playbooks/roles/*_lappy/
+playbooks/thinkpad-bootstrap.yml
