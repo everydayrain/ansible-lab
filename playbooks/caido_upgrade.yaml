@@ -1,7 +1,7 @@
 # Use this playbook whenever you need to update caido
 ---
 - name: Update caido
-  hosts: recon
+  hosts:
   become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
@@ -27,8 +27,8 @@
 
     - name: Move the old binary to a backup
       ansible.builtin.copy:
-        src: "/home/zippy/caido/caido-cli"
-        dest: "/home/zippy/caido/caido-cli-{{ oldversion }}.bak"
+        src: "/home/zippy/hacking_apps/caido/caido-cli"
+        dest: "/home/zippy/hacking_apps/caido/caido-cli-{{ oldversion }}.bak"
         owner: zippy
         group: zippy
         mode: 644
@@ -48,7 +48,7 @@
     - name: Copy file from downloads to caido folder
       ansible.builtin.copy:
         src: "/home/zippy/downloads/caido-cli"
-        dest: "/home/zippy/caido/caido-cli"
+        dest: "/home/zippy/hacking_apps/caido/caido-cli"
         remote_src: true
         owner: zippy
         group: zippy
