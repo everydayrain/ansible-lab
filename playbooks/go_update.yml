@@ -1,0 +1,22 @@
+# Use this playbook whenever you make a clone of the Ubuntu 24.04 template
+---
+- hosts: thinkpad
+
+  vars:
+    docker_install_compose_plugin: true
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+    docker_add_repo: true
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/lappy.yml') }}"
+
+  roles:
+    - apt_update_lappy
+    - basics_lappy
+    # - dotfiles_lappy
+    - rustup_lappy
+    - starship_lappy
+    - atuin_lappy
+    - rust_apps_lappy
+    - yazi_lappy
+    - role: geerlingguy.docker
+      become: true
