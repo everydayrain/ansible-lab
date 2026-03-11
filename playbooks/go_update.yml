@@ -2,6 +2,7 @@
   hosts: recon
   become: true
   vars:
+    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
     go_install_path: "/usr/local"
   vars_prompt:
     - name: url
