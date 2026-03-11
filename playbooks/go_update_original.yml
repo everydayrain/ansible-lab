@@ -1,4 +1,5 @@
 - name: Install or Update Go
+  hosts: recon
   become: true
   vars:
     ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vps.yml') }}"
@@ -34,7 +35,7 @@
 
     - name: Extract Go tarball
       ansible.builtin.unarchive:
-        src: "/tmp/go{{ go_version }}.tar.gz"
+        src: "/tmp/go{{ version }}.tar.gz"
         dest: "{{ go_install_path }}"
         remote_src: true
         creates: "{{ go_install_path }}/go/bin/go"

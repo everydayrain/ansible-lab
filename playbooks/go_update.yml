@@ -1,22 +1,61 @@
-# Use this playbook whenever you make a clone of the Ubuntu 24.04 template
----
-- hosts: thinkpad
-
+- name: Install or Update Go
+  hosts: recon
+  become: true
   vars:
-    docker_install_compose_plugin: true
-    docker_compose_package: docker-compose-plugin
-    docker_compose_package_state: present
-    docker_add_repo: true
-    ansible_become_pass: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/lappy.yml') }}"
+    go_install_path: "/usr/local"
+  vars_prompt:
+    - name: url
+      prompt: "What is the go binary download url (e.g. https://go.dev/dl/go1.25.1.linux-amd64.tar.gz)"
+      private: false
+    - name: version
+      prompt: "What is the binary version number?"
+      private: false
+  tasks:
+    - name: Download the Go tarball
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "/tmp/go{{ version }}.tar.gz"
+        mode: "0655"
 
-  roles:
-    - apt_update_lappy
-    - basics_lappy
-    # - dotfiles_lappy
-    - rustup_lappy
-    - starship_lappy
-    - atuin_lappy
-    - rust_apps_lappy
-    - yazi_lappy
-    - role: geerlingguy.docker
-      become: true
+    - name: Ensure Go install path exists
+      ansible.builtin.file:
+        path: "{{ go_install_path }}"
+        state: directory
+        mode: "0755"
+
+    - name: Check if existing Go installation is present
+      ansible.builtin.stat:
+        path: "{{ go_install_path }}/go"
+      register: go_existing
+
+    - name: Debug stat result
+      ansible.builtin.debug:
+        var: go_existing
+
+    - name: Remove existing Go installation
+      ansible.builtin.file:
+        path: "{{ go_install_path }}/go"
+        state: absent
+      when: go_existing.stat.exists
+
+    - name: Extract Go tarball
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ version }}.tar.gz"
+        dest: "{{ go_install_path }}"
+        remote_src: true
+
+    - name: Add Go binary path to ~/.profile
+      ansible.builtin.lineinfile:
+        path: "~/.profile"
+        line: "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin"
+        create: true
+        state: present
+
+    - name: Verify Go installation
+      ansible.builtin.command: "{{ go_install_path }}/go/bin/go version"
+      register: go_version_output
+      changed_when: false
+
+    - name: Display Go version
+      ansible.builtin.debug:
+        var: go_version_output.stdout
