@@ -13,7 +13,7 @@
       - ripgrep
       - fzf
       - zoxide
-      - resvg
+      # - resvg # not found in apt repos
       - imagemagick
       - xclip
     state: present
