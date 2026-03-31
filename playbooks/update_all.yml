@@ -75,3 +75,13 @@
       poll: 5
   roles:
     - apt_update_vps
+
+- name: Update lappy
+  hosts: thinkpad
+  tasks:
+    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
+      async: 45
+      ansible.builtin.command: /bin/sleep 15
+      poll: 5
+  roles:
+    - apt_update_lappy
