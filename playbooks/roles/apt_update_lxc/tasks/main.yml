@@ -17,3 +17,8 @@
   stat:
     path: /var/run/reboot-required
   register: reboot_required_file
+
+- name: Report reboot status
+  ansible.builtin.debug:
+    msg: "{{ inventory_hostname }} reports a reboot is required (kernel updates need the Proxmox host rebooted)"
+  when: reboot_required_file.stat.exists

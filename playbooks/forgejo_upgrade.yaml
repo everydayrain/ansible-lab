@@ -18,7 +18,7 @@
       ansible.builtin.get_url:
         url: "{{ url }}"
         dest: "/home/zippy/downloads/forgejo-{{ version }}-linux-amd64"
-        mode: 655
+        mode: "755"
         checksum: sha256:{{ checksum }}
       become: true
       vars:

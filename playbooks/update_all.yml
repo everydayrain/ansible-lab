@@ -1,77 +1,42 @@
----
 - hosts: VM
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
+  gather_facts: false
+  serial: 1
+  become: true
+  vars:
+    ansible_become_password: "{{ lookup('ansible.builtin.file', '/home/sociodicy/scripts/ansible/secrets/vm_pass.yml') }}"
   roles:
     - apt_update_vm
 
-- hosts: kali
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
-  roles:
-    - apt_update_kali
-
-- hosts: lxc
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
+- name: Upgrade lxcs
+  hosts: lxc
+  gather_facts: false
+  serial: 1
   roles:
     - apt_update_lxc
 
-- hosts: PVE
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
+- name: Upgrade Proxmox Virtual Environment
+  hosts: PVE
+  gather_facts: false
+  serial: 1
   roles:
     - apt_update_lxc
 
-- name: Update and upgrade RPIs
+- name: Update and upgrade RPI OSes
   hosts: Pi-holes
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
   roles:
     - apt_update_rpi
 
-- name: Update and upgrade pihole
+- name: Update and upgrade pihole software
   hosts: Pi-holes
+  gather_facts: false
+  serial: 1
   become: true
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      ansible.builtin.command: /bin/sleep 15
-      async: 45
-      poll: 5
   roles:
     - pihole_up
 
 - name: Update and upgrade vaultwarden family server
   hosts: VW
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      async: 45
-      ansible.builtin.command: /bin/sleep 15
-      poll: 5
+  gather_facts: false
+  serial: 1
   roles:
     - apt_update_special
-
-- name: Update lappy
-  hosts: thinkpad
-  tasks:
-    - name: Simulate long running op (15 sec), wait for up to 45 sec, poll every 5 sec
-      async: 45
-      ansible.builtin.command: /bin/sleep 15
-      poll: 5
-  roles:
-    - apt_update_lappy
