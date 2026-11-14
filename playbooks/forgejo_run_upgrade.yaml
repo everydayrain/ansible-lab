@@ -1,0 +1,89 @@
+- name: Update forgejo runner
+  hosts: localhost
+  connection: local
+  become: true
+  vars_prompt:
+    - name: url
+      prompt: What is the forgejo-runner binary download url (e.g. "https://code.forgejo.org/forgejo/runner/releases/download/v9.3.0/forgejo-runner-9.3.0-linux-amd64")?
+      private: false
+    - name: checksum_url
+      prompt: What is the checksum file download url (e.g. "https://code.forgejo.org/forgejo/runner/releases/download/v9.3.0/forgejo-runner-9.3.0-linux-amd64.sha256")?
+      private: false
+  vars:
+    runner_bin: /usr/local/bin/forgejo-runner
+    runner_service: forgejo-runner # set to "" if the runner isn't a systemd service
+    staged_bin: "/tmp/{{ url | basename }}"
+  tasks:
+    - name: Record the currently installed version
+      ansible.builtin.command: "{{ runner_bin }} --version"
+      register: old_version
+      changed_when: false
+      failed_when: false
+
+    - name: Download and verify the new runner binary
+      ansible.builtin.get_url:
+        url: "{{ url }}"
+        dest: "{{ staged_bin }}"
+        mode: "0755"
+        checksum: "sha256:{{ checksum_url }}"
+
+    - name: Install the new binary with rollback on failure
+      block:
+        - name: Back up the current binary
+          ansible.builtin.copy:
+            src: "{{ runner_bin }}"
+            dest: "{{ runner_bin }}.bak"
+            remote_src: true
+            mode: preserve
+          register: backup_result
+
+        - name: Install the new binary
+          ansible.builtin.copy:
+            src: "{{ staged_bin }}"
+            dest: "{{ runner_bin }}"
+            remote_src: true
+            owner: root
+            group: root
+            mode: "0755"
+
+        - name: Restart the runner service
+          ansible.builtin.systemd:
+            name: "{{ runner_service }}"
+            state: restarted
+          when: runner_service | length > 0
+
+        - name: Confirm the new version runs
+          ansible.builtin.command: "{{ runner_bin }} --version"
+          register: new_version
+          changed_when: false
+
+      rescue:
+        - name: Restore the previous binary
+          ansible.builtin.copy:
+            src: "{{ runner_bin }}.bak"
+            dest: "{{ runner_bin }}"
+            remote_src: true
+            owner: root
+            group: root
+            mode: "0755"
+          when: backup_result is defined and backup_result.changed
+
+        - name: Restart the service on the restored binary
+          ansible.builtin.systemd:
+            name: "{{ runner_service }}"
+            state: restarted
+          when: runner_service | length > 0 and backup_result is defined and backup_result.changed
+
+        - name: Report the failed upgrade
+          ansible.builtin.fail:
+            msg: "Upgrade failed; previous binary restored. Check the service logs."
+
+      always:
+        - name: Remove the staged download
+          ansible.builtin.file:
+            path: "{{ staged_bin }}"
+            state: absent
+
+    - name: Show the version change
+      ansible.builtin.debug:
+        msg: "{{ old_version.stdout | default('unknown') }} -> {{ new_version.stdout }}"
